@@ -1,0 +1,33 @@
+default:
+    @just run-server
+
+uv-sync:
+    uv sync --active
+
+# CLI: Run CLI application
+run-cli:
+    uv run --active boilerplate-cli run
+
+run-custom:
+    uv run --active boilerplate-cli run --message "Custom message!"
+
+run-json:
+    uv run --active boilerplate-cli run --json
+
+demo-duckdb:
+    uv run --active boilerplate-cli demo-duckdb
+
+demo-polars:
+    uv run --active boilerplate-cli demo-polars
+
+demo-cattrs:
+    uv run --active boilerplate-cli demo-cattrs
+
+# Web: Start Flask dev server
+dev:
+    uv run --active python -m boilerplate_app.wsgi
+
+# Web: Start production server with gunicorn
+run-server:
+    uv run --active gunicorn boilerplate_app.wsgi:app --bind 0.0.0.0:43280
+

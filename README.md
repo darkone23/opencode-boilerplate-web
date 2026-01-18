@@ -1,29 +1,40 @@
-# Boilerplate CLI Template
+# Boilerplate Web Template
 
-A modern Python CLI application template demonstrating `uv` builds with `click`, `rich`, and `sh` library.
+A modern full-stack web application template with Vite + Flask, demonstrating a clean separation between frontend and backend.
 Built with `nix` & `devenv` for reproducible environments.
-Terminal first for taking advantage of agent workflows like `opencode`
+Terminal first for taking advantage of agent workflows like `opencode`.
 
 ## Features
 
-- Modern CLI interface built with `click` with command groups
-- Beautiful terminal output with `rich`
-- Subprocess management via `sh` library
-- Data processing examples with `polars` and `duckdb`
-- Dataclass serialization with `cattrs`
-- Agent integration for `opencode`
-- Clean JSON output for programmatic use
-- Reproducible `nix` & `devenv` environment
-- `uv` for fast Python dependency management
-- Task automation with `just`
+### Frontend
+- Modern build tooling with Vite
+- Styling with Tailwind CSS v4 + DaisyUI v5
+- HTMX for server-driven interactivity
+- Surreal.js for locality of behavior
+- TypeScript support
+- Hot module replacement in development
+
+### Backend
+- Flask with Blueprint-based API routes
+- WSGI factory compatible with gunicorn
+- Jinja2 templating support
+- CLI tools with Click + Rich + sh libraries
+- Data processing with Polars and DuckDB
+- Dataclass serialization with cattrs
+
+### Infrastructure
+- Reproducible Nix/devenv environment
+- UV for fast Python dependency management
+- Bun for fast frontend package management
+- Task automation with Just
+- Vite proxy for seamless API development
 
 ## Quick Start
 
 ### Prerequisites
 - [Nix](https://nixos.org/download/)
 - [devenv](https://devenv.sh/)
-- [git](https://git-scm.com/)
-- [just](https://just.systems/)
+- [Git](https://git-scm.com/)
 
 ### Setup and Run
 
@@ -31,105 +42,130 @@ Terminal first for taking advantage of agent workflows like `opencode`
 # Enter development environment (all setup is automatic)
 devenv shell
 
-# Run default command
-just
+# Install frontend dependencies
+cd frontend && bun install && cd ..
 
-# Run with custom message
-just run-custom
-
-# Run with JSON output
-just run-json
-
-# Run demo commands
-just demo-duckdb   # DuckDB query examples
-just demo-polars   # Polars DataFrame examples
-just demo-cattrs   # Cattrs serialization examples
-
-# Direct usage
-uv run boilerplate-cli --help
-uv run boilerplate-cli run --message "Custom message" --json
+# Start development servers (frontend + backend)
+just dev
 ```
 
-## CLI Commands and Options
+This starts:
+- Vite dev server at http://localhost:43210
+- Flask API server at http://localhost:43280
 
-The CLI uses a command group pattern with the following subcommands:
+The Vite dev server proxies `/api/*` requests to Flask automatically.
 
-### `run` - Main application command
-- `--message TEXT`: Message to display (default: "Hello, World!")
-- `--json`: Output parsable JSON instead of formatted output
-
-### `demo-duckdb` - DuckDB demonstration
-Runs sample DuckDB queries showing in-memory database operations.
-
-### `demo-polars` - Polars demonstration
-Demonstrates Polars DataFrame operations including filtering, sorting, and aggregation.
-
-### `demo-cattrs` - Cattrs demonstration
-Shows cattrs dataclass serialization/deserialization examples.
-
-## Examples
-
-### Basic Usage
+### Available Commands
 
 ```bash
-# Default hello world
-uv run boilerplate-cli run
+# Development
+just dev              # Start both frontend and backend dev servers
+just dev-frontend     # Start only Vite dev server (port 43210)
+just dev-backend      # Start only Flask dev server (port 43280)
 
-# Custom message
-uv run boilerplate-cli run --message "Hello from boilerplate!"
+# Production
+just build            # Build frontend for production
+just run              # Start production server with gunicorn
 
-# Run demos
-uv run boilerplate-cli demo-duckdb
-uv run boilerplate-cli demo-polars
-uv run boilerplate-cli demo-cattrs
-```
+# CLI Tools
+just run-cli          # Run CLI application
+just run-custom       # Run CLI with custom message
+just run-json         # Run CLI with JSON output
 
-### JSON Output for Scripting
-
-```bash
-# Clean JSON output for piping to json tools
-just run-json | ...
-
-# Output to file
-just run-json > output.json
+# Demos
+just demo-duckdb      # DuckDB query examples
+just demo-polars      # Polars DataFrame examples
+just demo-cattrs      # Cattrs serialization examples
 ```
 
 ## Project Structure
 
 ```
 .
-├── boilerplate_app/        # Python application directory
-│   ├── __init__.py
-│   ├── cli.py              # Main CLI application with command group
-│   ├── cattrs_example.py   # Cattrs serialization examples
-│   ├── duckdb_example.py   # DuckDB query examples
-│   └── polars_example.py   # Polars DataFrame examples
-├── justfile                # Just task runner recipes
-├── devenv.nix              # Development environment configuration
-├── devenv.yaml             # Devenv inputs configuration
-├── pyproject.toml          # Python package configuration
-├── uv.lock                 # UV dependency lockfile
-├── devenv.lock             # Devenv environment lockfile
-├── .envrc                  # Direnv configuration
-├── .gitignore              # Git ignore rules
-├── AGENTS.md               # AI assistant configuration
-├── README.md               # This file
-└── DEV.md                  # Developer guide
+├── frontend/                   # Vite + TypeScript frontend
+│   ├── src/
+│   │   ├── main.ts            # Application entry point
+│   │   └── tailwind.css       # Tailwind + DaisyUI styles
+│   ├── index.html             # HTML entry point
+│   ├── vite.config.ts         # Vite configuration
+│   ├── package.json           # Frontend dependencies
+│   └── justfile               # Frontend-specific commands
+├── backend/                    # Flask + Python backend
+│   ├── boilerplate_app/
+│   │   ├── web/
+│   │   │   ├── __init__.py    # Flask app factory
+│   │   │   ├── routes.py      # API Blueprint routes
+│   │   │   └── templates/     # Jinja2 templates
+│   │   ├── cli.py             # CLI application
+│   │   ├── wsgi.py            # WSGI entry point
+│   │   └── *_example.py       # Demo modules
+│   ├── pyproject.toml         # Python package config
+│   └── justfile               # Backend-specific commands
+├── devenv.nix                  # Development environment
+├── devenv.yaml                 # Devenv inputs
+├── justfile                    # Root task runner
+├── AGENTS.md                   # AI assistant configuration
+├── README.md                   # This file
+└── DEV.md                      # Developer guide
 ```
 
 ## Architecture
 
-- **CLI Layer**: Click-based command group interface with subcommands
-- **Output Layer**: Rich for formatted display, JSON for machine consumption
-- **System Integration**: sh library for subprocess calls
-- **Data Processing**: Polars for DataFrames, DuckDB for SQL queries
-- **Serialization**: cattrs for dataclass serialization/deserialization
-- **Environment**: Nix/devenv for reproducible development
-- **Package Manager**: UV for Python dependency management
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     Development Mode                         │
+├─────────────────────────────────────────────────────────────┤
+│  Browser ──► Vite (43210) ──► Flask API (43280)             │
+│              │                    │                          │
+│              ├─ Hot reload        ├─ /api/* routes           │
+│              ├─ Tailwind/DaisyUI  ├─ JSON responses          │
+│              └─ HTMX/Surreal.js   └─ HTML partials           │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│                     Production Mode                          │
+├─────────────────────────────────────────────────────────────┤
+│  Browser ──► Gunicorn (43280)                                │
+│                  │                                           │
+│                  ├─ Serves built frontend from dist/         │
+│                  └─ /api/* routes                            │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Tech Stack
+
+| Layer | Technology | Purpose |
+|-------|------------|---------|
+| Frontend Build | Vite | Fast dev server, optimized builds |
+| Styling | Tailwind CSS + DaisyUI | Utility-first CSS with components |
+| Interactivity | HTMX | Server-driven UI updates |
+| Behavior | Surreal.js | Locality of behavior patterns |
+| Backend | Flask | Python web framework |
+| WSGI | Gunicorn | Production server |
+| CLI | Click + Rich | Command-line interface |
+| Data | Polars + DuckDB | Data processing |
+| Package Mgmt | UV (Python), Bun (JS) | Fast dependency management |
+| Environment | Nix + devenv | Reproducible development |
+
+## API Endpoints
+
+| Endpoint | Method | Response | Description |
+|----------|--------|----------|-------------|
+| `/api/hello` | GET | JSON | Returns greeting message |
+| `/api/hello` | POST | JSON | Returns personalized greeting |
+| `/api/hello-htmx` | GET | HTML | Returns HTML partial for HTMX |
 
 ## Development
 
-See [DEV.md](./DEV.md) for developer instructions and contribution guidelines.
+See [DEV.md](./DEV.md) for detailed developer instructions.
+
+### Quick Development Workflow
+
+1. Enter devenv: `devenv shell`
+2. Install deps: `cd frontend && bun install && cd ..`
+3. Start servers: `just dev`
+4. Edit code - changes hot reload automatically
+5. Build for production: `just build`
 
 ## License
 

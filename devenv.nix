@@ -13,7 +13,7 @@ let
 in
 {
   # https://devenv.sh/basics/
-  env.SESSION_NAME = "boilerplate-cli";
+  env.SESSION_NAME = "boilerplate-web";
   env.GIT_EXTERNAL_DIFF = "${pkgs.difftastic}/bin/difft";
 
   # https://devenv.sh/packages/
@@ -42,7 +42,14 @@ in
   languages.python.enable = true;
   languages.python.uv.enable = true;
   languages.python.uv.sync.enable = true;
+  languages.python.directory = "backend";
   languages.python.venv.enable = true;
+  languages.python.lsp.enable = false; # manually installed via pkgs above
+  languages.javascript.enable = true;
+  languages.javascript.bun.enable = true;
+  languages.javascript.bun.install.enable = true;
+  languages.javascript.directory = "frontend";
+  languages.javascript.lsp.enable = true;
 
   # https://devenv.sh/processes/
   # processes.cargo-watch.exec = "cargo-watch";
@@ -99,6 +106,7 @@ in
     # git --version
     echo "Python path: $(which python)"
     echo "UV path: $(which uv)"
+    echo "Bun path: $(which bun)"
   '';
 
   # https://devenv.sh/git-hooks/

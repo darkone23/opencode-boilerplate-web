@@ -1,0 +1,22 @@
+default:
+    @just dev
+
+# Install dependencies
+install:
+    bun install
+
+# Start Vite dev server
+dev:
+    bun run dev
+
+# Build for production
+build:
+    bun run build
+
+# Preview production build
+preview:
+    bun run preview
+
+# Clean build output
+clean:
+    rm -rf dist

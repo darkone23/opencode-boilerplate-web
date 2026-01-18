@@ -1,0 +1,24 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 43210",
+    "build": "tsc && vite build",
+    "preview": "vite preview --port 43210"
+  },
+  "dependencies": {
+    "daisyui": "^5.5.14",
+    "htmx.org": "^2.0.8",
+    "surreal.js": "^0.5.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.18",
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18",
+    "typescript": "~5.9.3",
+    "vite": "^7.2.4"
+  }
+}
